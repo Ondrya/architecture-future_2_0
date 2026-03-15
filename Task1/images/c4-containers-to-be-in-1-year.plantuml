@@ -1,0 +1,50 @@
+@startuml "Архитектура через год"
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Целевая архитектура «Будущее 2.0» (через 1 год)
+
+Person(analyst, "Бизнес-аналитик", "Работает с витриной данных")
+Person(doctor, "Врач", "Использует медицинские системы")
+Person(fintech_user, "Финансовый оператор", "Работает с финтех-сервисами")
+
+System_Boundary(cloud, "Облачная платформа") {
+    
+    Container(data_portal, "Портал самообслуживания (Витрина данных)", "Web + API", "Конструктор отчётов, метаданные, контроль доступа")
+    
+    Container_Boundary(medical_domain, "Домен: Медицина") {
+        Container(med_db, "Медицинская БД", "Cloud SQL/NoSQL", "Карты пациентов, снимки — НЕ передаются в витрину")
+        Container(med_svc, "Медицинские сервисы", "Microservices", "Приём, хранение, доступ к медицинским данным")
+    }
+    
+    Container_Boundary(fintech_domain, "Домен: Финтех") {
+        Container(ft_db, "Финансовая БД", "Cloud OLAP", "Счета, транзакции, кредиты — агрегированные данные для витрины")
+        Container(ft_svc, "Финтех-сервисы", "Go/Java", "Платежи, скоринг, отчётность")
+    }
+    
+    Container_Boundary(ai_domain, "Домен: ИИ-сервисы") {
+        Container(ai_svc, "ИИ-модели", "Python/ML Platform", "Диагностика, прогнозы — результаты агрегируются для аналитики")
+    }
+    
+    Container(analytics_core, "Аналитическое ядро", "Lakehouse + BI Engine", "Агрегированные обезличенные данные из доменов, быстрый доступ для отчётов")
+    
+    Container(api_gateway, "API Gateway", "Cloud Gateway", "Единая точка входа, маршрутизация, безопасность")
+}
+
+Rel(analyst, data_portal, "Строит отчёты", "HTTPS")
+Rel(doctor, med_svc, "Работает с картами", "HTTPS")
+Rel(fintech_user, ft_svc, "Проводит операции", "HTTPS")
+
+Rel(data_portal, analytics_core, "Запрашивает агрегированные данные", "Internal API")
+Rel(analytics_core, ft_db, "Забирает финансовые метрики", "CDC/ETL")
+Rel(analytics_core, ai_svc, "Получает результаты моделей", "Event Stream")
+Rel(med_svc, ai_svc, "Передаёт данные для анализа", "Secure Channel")
+
+Rel(api_gateway, data_portal, "Маршрутизирует запросы", "HTTPS")
+Rel(api_gateway, med_svc, "Маршрутизирует запросы", "HTTPS")
+Rel(api_gateway, ft_svc, "Маршрутизирует запросы", "HTTPS")
+
+Note right of data_portal: **Ключевое ограничение**:\nМедицинские карты и истории болезней\nНЕ попадают в витрину данных
+Note right of analytics_core: **Поддержка сценариев**:\n• Быстрые отчёты (секунды, не часы)\n• Независимое масштабирование доменов\n• Подключение новых бизнесов через стандартные контракты
+
+@enduml

@@ -1,0 +1,122 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Целевая архитектура «Будущее 2.0» (через 1 год) — оптимизированная версия
+
+' Пользователи слева
+Person(analyst, "Бизнес-аналитик", "Строит отчёты через портал")
+Person(doctor, "Врач", "Работает с медицинскими системами")
+Person(fintech_user, "Финансовый оператор", "Проводит финансовые операции")
+Person(admin, "Администратор безопасности", "Управляет доступом и политиками")
+Person(data_steward, "Дата-стюард", "Размечает и описывает данные")
+
+System_Boundary(cloud, "Облачная платформа") {
+    
+    ' Инфраструктурные сервисы - верхний ряд
+    Container(iam, "IAM-сервис", "Identity Provider", "Единая аутентификация, RBAC, аудит")
+    Container(backup_dr, "Сервис резервного копирования и DR", "Cloud Backup", "Автоматические бэкапы, восстановление")
+    
+    ' Ядро платформы - центральный ряд
+    Container(api_gateway, "API Gateway", "Cloud Gateway", "Единая точка входа, маршрутизация, TLS")
+    Container(data_portal, "Портал самообслуживания", "Web + API", "Конструктор отчётов, метаданные")
+    Container(data_catalog, "Data Catalog", "Metadata UI + Search", "Поиск и описание данных")
+    Container(metadata_svc, "Сервис управления метаданными", "Apache Atlas-like", "Линидж, классификация, политики")
+    
+    ' Домены - правая часть
+    Container_Boundary(medical_domain, "Домен: Медицина") {
+        Container(med_svc, "Медицинские сервисы", "Microservices", "CRUD, валидация, бизнес-логика")
+        Container(med_db, "Медицинская БД", "Cloud SQL/NoSQL", "Карты пациентов, снимки")
+        Container(sensitive_svc, "Сервис чувствительных данных", "Encryption/Tokenization", "Маскирование, псевдонимизация")
+    }
+    
+    Container_Boundary(fintech_domain, "Домен: Финтех") {
+        Container(ft_svc, "Финтех-сервисы", "Go/Java", "Платежи, скоринг, отчётность")
+        Container(ft_db, "Финансовая БД", "Cloud OLAP", "Счета, транзакции, кредиты")
+    }
+    
+    Container_Boundary(ai_domain, "Домен: ИИ") {
+        Container(ai_svc, "ИИ-модели", "Python/ML Platform", "Диагностика, прогнозы")
+    }
+    
+    ' Аналитика и интеграция - нижний ряд
+    Container(analytics_core, "Аналитическое ядро", "Lakehouse + BI Engine", "Агрегированные обезличенные данные")
+    Container(message_broker, "Брокер сообщений", "Kafka/RabbitMQ", "Асинхронный обмен событиями")
+    
+    Container_Boundary(integration_layer, "Интеграционный слой") {
+        Container(esb, "ESB (Apache Camel)", "Enterprise Service Bus", "Маршрутизация для легаси")
+        Container(legacy_adapter, "Адаптер DWH", "ETL/ELT + API Wrapper", "Изоляция старого хранилища")
+        Container(legacy_dwh, "Legacy DWH", "SQL Server 2008", "Исторические данные, постепенно выводится")
+    }
+}
+
+' ========== ПОЛЬЗОВАТЕЛИ К СИСТЕМАМ (вертикальные линии, минимум пересечений) ==========
+Rel(analyst, data_portal, "HTTPS")
+Rel(doctor, med_svc, "HTTPS")
+Rel(fintech_user, ft_svc, "HTTPS")
+Rel(admin, iam, "Admin UI")
+Rel(data_steward, data_catalog, "UI")
+
+' ========== IAM КО ВСЕМ СИСТЕМАМ (скрытые связи для порядка) ==========
+Rel(iam, api_gateway, "OIDC/OAuth2")
+Rel(iam, data_portal, "OIDC/OAuth2")
+Rel(iam, med_svc, "OIDC/OAuth2")
+Rel(iam, ft_svc, "OIDC/OAuth2")
+Rel(iam, ai_svc, "OIDC/OAuth2")
+Rel(iam, data_catalog, "OIDC/OAuth2")
+
+' ========== ПОТОК ДАННЫХ: СЛЕВА НАПРАВО (основной flow) ==========
+Rel(api_gateway, data_portal, "HTTPS")
+Rel(data_portal, analytics_core, "Internal API")
+Rel(data_portal, data_catalog, "Search API")
+Rel(data_catalog, metadata_svc, "Internal API")
+
+' ========== ДОМЕНЫ К БРОКЕРУ (короткие связи, без пересечений) ==========
+Rel(sensitive_svc, message_broker, "Publish")
+Rel(ft_svc, message_broker, "Publish")
+Rel(ai_svc, message_broker, "Publish")
+
+' ========== БРОКЕР К АНАЛИТИКЕ (прямая связь) ==========
+Rel(message_broker, analytics_core, "Subscribe")
+
+' ========== ДОМЕНЫ К МЕТАДАННЫМ (локальные связи) ==========
+Rel(med_svc, metadata_svc, "Metadata API")
+Rel(ft_svc, metadata_svc, "Metadata API")
+Rel(ai_svc, metadata_svc, "Metadata API")
+
+' ========== МЕДИЦИНСКИЙ ДОМЕН ВНУТРИ ==========
+Rel(med_svc, med_db, "CRUD")
+Rel(med_svc, sensitive_svc, "Internal API")
+
+' ========== ФИНТЕХ ДОМЕН ВНУТРИ ==========
+Rel(ft_svc, ft_db, "CRUD")
+
+' ========== ИНТЕГРАЦИОННЫЙ СЛОЙ (нижний ряд, без пересечений) ==========
+Rel(esb, legacy_adapter, "Legacy Protocol")
+Rel(legacy_adapter, legacy_dwh, "Legacy Protocol")
+Rel(legacy_adapter, metadata_svc, "Scanner")
+Rel(esb, message_broker, "Adapter")
+Rel(esb, med_svc, "Async")
+Rel(esb, ft_svc, "Async")
+
+' ========== АНАЛИТИКА К ИСТОЧНИКАМ ==========
+Rel(analytics_core, legacy_adapter, "Batch ETL")
+Rel(analytics_core, metadata_svc, "Hook/API")
+
+' ========== РЕЗЕРВНОЕ КОПИРОВАНИЕ (отдельный блок снизу) ==========
+Rel(backup_dr, legacy_dwh, "Backup")
+Rel(backup_dr, med_db, "Snapshot")
+Rel(backup_dr, ft_db, "Snapshot")
+Rel(backup_dr, analytics_core, "Snapshot")
+
+' ========== СКРЫТЫЕ СВЯЗИ ДЛЯ УЛУЧШЕНИЯ КОМПОНОВКИ ==========
+'Hidden_Legend: off
+'Rel_Backup_Dr: off
+
+' Примечания
+Note right of data_portal: **Витрина данных**\nТолько обезличенные агрегаты\nМедицинские карты — вне периметра
+Note right of metadata_svc: **Data Governance**\nЛинидж, классификация, политики
+Note right of integration_layer: **Стратегия интеграции**\nESB для легаси, Broker для новых доменов
+Note right of message_broker: **Асинхронная интеграция**\nДомены независимы
+Note right of iam: **Единый доступ**\nRBAC, аудит, комплаенс
+
+@enduml

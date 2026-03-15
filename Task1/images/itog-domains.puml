@@ -1,0 +1,41 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam backgroundColor #fff
+skinparam rectangle {
+    backgroundColor #fff
+    borderColor #black
+    fontColor #black
+}
+skinparam arrowColor #black
+
+frame "Облачная платформа" as Cloud {
+    
+    rectangle "Инфраструктура: IAM, Backup, API Gateway, Catalog, Metadata" as Infra
+    
+    package "Domain Services" as Domain {
+        rectangle "Медицина\n(SVC + БД)" as Medicine
+        rectangle "Финтех\n(SVC + БД)" as Fintech
+        rectangle "ИИ\n(ML Platform)" as AI
+    }
+    
+    rectangle "Message Broker\n(Kafka/RabbitMQ)" as Broker
+    
+    rectangle "Аналитическое ядро\n(Lakehouse + BI)" as Analytics
+    
+    rectangle "Интеграционный слой: \n- ESB \n- Legacy Adapter \n- SQL Server 2008" as Integration
+    
+    Infra -down-> Medicine
+    Infra -down-> Fintech
+    Infra -down-> AI
+    
+    Medicine -down-> Broker
+    Fintech -down-> Broker
+    AI -down-> Broker
+    
+    Broker -down-> Integration
+
+    Integration -down-> Analytics
+    
+}
+
+@enduml
