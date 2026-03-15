@@ -1,0 +1,28 @@
+@startuml
+'skinparam backgroundColor #1a1a1a
+skinparam backgroundColor #FFFFFF
+skinparam componentStyle rectangle
+skinparam arrowColor #red
+skinparam rectangle {
+    BackgroundColor #ffffff
+    BorderColor #red
+    FontColor #000000
+}
+
+rectangle "Клиентский интерфейс\nоператора" as Client
+rectangle "BI-система" as BI
+rectangle "DWH" as DWH
+rectangle "ИИ-сервисы" as AI
+rectangle "Сервисная шина\nпредприятия (ESB)" as ESB
+rectangle "Финтех-сервисы" as Fintech
+rectangle "Внутренние сервисы" as Internal
+
+' Потоки данных
+Client -down-> DWH : Медицинские данные,\nснимки
+DWH -> BI : Данные
+DWH <--> ESB : Обмен
+AI <-right-> ESB : Медицинские данные
+ESB <-right-> Fintech : Финансовые данные
+ESB -down-> Internal : Внутренние финансовые данные,\nуправление клиниками и тд
+
+@enduml
