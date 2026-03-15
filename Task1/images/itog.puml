@@ -3,7 +3,6 @@
 
 title Целевая архитектура «Будущее 2.0» (через 1 год) — оптимизированная версия
 
-' Пользователи слева
 Person(analyst, "Бизнес-аналитик", "Строит отчёты через портал")
 Person(doctor, "Врач", "Работает с медицинскими системами")
 Person(fintech_user, "Финансовый оператор", "Проводит финансовые операции")
@@ -54,7 +53,8 @@ Rel(analyst, data_portal, "HTTPS")
 Rel(doctor, med_svc, "HTTPS")
 Rel(fintech_user, ft_svc, "HTTPS")
 Rel(admin, iam, "Admin UI")
-Rel(data_steward, data_catalog, "UI")
+'Rel(data_steward, data_catalog, "UI")
+data_steward -up-> data_catalog: UI
 
 ' ========== IAM КО ВСЕМ СИСТЕМАМ (скрытые связи для порядка) ==========
 Rel(iam, api_gateway, "OIDC/OAuth2")
@@ -108,15 +108,11 @@ Rel(backup_dr, med_db, "Snapshot")
 Rel(backup_dr, ft_db, "Snapshot")
 Rel(backup_dr, analytics_core, "Snapshot")
 
-' ========== СКРЫТЫЕ СВЯЗИ ДЛЯ УЛУЧШЕНИЯ КОМПОНОВКИ ==========
-'Hidden_Legend: off
-'Rel_Backup_Dr: off
-
 ' Примечания
-Note right of data_portal: **Витрина данных**\nТолько обезличенные агрегаты\nМедицинские карты — вне периметра
-Note right of metadata_svc: **Data Governance**\nЛинидж, классификация, политики
-Note right of integration_layer: **Стратегия интеграции**\nESB для легаси, Broker для новых доменов
-Note right of message_broker: **Асинхронная интеграция**\nДомены независимы
-Note right of iam: **Единый доступ**\nRBAC, аудит, комплаенс
+Note bottom of data_portal: **Витрина данных**\nТолько обезличенные агрегаты\nМедицинские карты — вне периметра
+Note bottom of metadata_svc: **Data Governance**\nЛинидж, классификация, политики
+Note top of integration_layer: **Стратегия интеграции**\nESB для легаси, Broker для новых доменов
+Note left of message_broker: **Асинхронная интеграция**\nДомены независимы
+Note top of iam: **Единый доступ**\nRBAC, аудит, комплаенс
 
 @enduml
