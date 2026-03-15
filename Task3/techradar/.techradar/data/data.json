@@ -1,43 +1,214 @@
 {
   "releases": [
-    "2024-12-27"
+    "2026-03-13"
   ],
   "tags": [
+    "changed",
     "new"
   ],
   "items": [
     {
-      "id": "datamesh",
-      "release": "2024-12-27",
-      "title": "Data Mesh",
+      "id": "api-gateway",
+      "release": "2026-03-13",
+      "title": "API Gateway",
       "ring": "adopt",
-      "quadrant": "methods-and-patterns",
-      "body": "<p>Data Mesh</p>\n<p><img src=\"/images/logo.svg\" alt=\"stub\"></p>\n<p><a href=\"/adr/datamesh.md\">ADR</a></p>\n",
+      "quadrant": "tools",
+      "body": "<h1>API Gateway</h1>\n<p><img src=\"/images/api-gateway.svg\" alt=\"stub\"></p>\n<p><a href=\"/adr/api-gateway.md\">ADR</a></p>\n<p><strong>Бизнес-сценарии:</strong></p>\n<ul>\n<li>Подключение внешних партнёров (фармацевтика, электроника)</li>\n<li>Безопасный доступ к доменным сервисам</li>\n<li>Единая точка контроля и мониторинга</li>\n</ul>\n<p><strong>Обоснование:</strong>\nЕдиная точка входа стандартизирует интеграции, упрощает управление доступом и позволяет быстро подключать новые сервисы без изменений в ядре системы.</p>\n<p><strong>Риски:</strong></p>\n<ul>\n<li>Риск узкого места при неправильной настройке масштабирования</li>\n<li>Требует дисциплины версионирования API</li>\n</ul>\n<p><strong>Владелец:</strong> Integration Team</p>\n",
       "featured": true,
       "flag": "default",
       "tags": [
         "new"
       ],
       "position": [
-        429,
-        265
+        454,
+        432
       ]
     },
     {
-      "id": "datalakehouse",
-      "release": "2024-12-27",
-      "title": "Iceberg",
+      "id": "cdc-pipelines",
+      "release": "2026-03-13",
+      "title": "CDC-пайплайны",
       "ring": "adopt",
-      "quadrant": "platforms-and-operations",
-      "body": "<p>Apache Iceberg</p>\n",
+      "quadrant": "tools",
+      "body": "<h1>CDC-пайплайны (Change Data Capture)</h1>\n<p><img src=\"/images/cdc.svg\" alt=\"stub\"></p>\n<p><a href=\"/adr/cdc-pipelines.md\">ADR</a></p>\n<p><strong>Бизнес-сценарии:</strong></p>\n<ul>\n<li>Актуальность данных в витрине без нагрузки на источники</li>\n<li>Независимое развитие доменов</li>\n<li>Поддержка near real-time отчётности</li>\n</ul>\n<p><strong>Обоснование:</strong>\nМинимальная нагрузка на операционные БД, автоматическое отслеживание изменений, возможность асинхронной обработки данных для аналитики.</p>\n<p><strong>Риски:</strong></p>\n<ul>\n<li>Сложность отладки при ошибках в схемах данных</li>\n<li>Требует мониторинга лага репликации</li>\n</ul>\n<p><strong>Владелец:</strong> Data Team</p>\n",
       "featured": true,
       "flag": "default",
       "tags": [
         "new"
       ],
       "position": [
-        325,
-        479
+        573,
+        431
+      ]
+    },
+    {
+      "id": "cicd",
+      "release": "2026-03-13",
+      "title": "CI/CD Pipelines",
+      "ring": "adopt",
+      "quadrant": "methods-and-patterns",
+      "body": "<h1>CI/CD Pipelines</h1>\n<p><img src=\"/images/cicd.svg\" alt=\"stub\"></p>\n<p><a href=\"/adr/cicd.md\">ADR</a></p>\n<p><strong>Бизнес-сценарии:</strong></p>\n<ul>\n<li>Ускорение вывода изменений (time-to-market)</li>\n<li>Снижение рисков при деплое</li>\n<li>Независимые релизы доменов</li>\n</ul>\n<p><strong>Обоснование:</strong>\nАвтоматизация сборки, тестирования и развёртывания. Каждый домен может выпускать изменения без координации с другими.</p>\n<p><strong>Риски:</strong></p>\n<ul>\n<li>Требует дисциплины написания тестов</li>\n<li>Начальные затраты на настройку</li>\n</ul>\n<p><strong>Владелец:</strong> DevOps Team</p>\n",
+      "featured": true,
+      "flag": "default",
+      "tags": [
+        "new"
+      ],
+      "position": [
+        497,
+        382
+      ]
+    },
+    {
+      "id": "cloud-lakehouse",
+      "release": "2026-03-13",
+      "title": "Cloud Lakehouse",
+      "ring": "adopt",
+      "quadrant": "platforms-and-operations",
+      "body": "<h1>Cloud Lakehouse</h1>\n<p><img src=\"/images/lakehouse.svg\" alt=\"stub\"></p>\n<p><a href=\"/adr/cloud-lakehouse.md\">ADR</a></p>\n<p><strong>Бизнес-сценарии:</strong></p>\n<ul>\n<li>Быстрая подготовка отчётности (секунды вместо часов)</li>\n<li>Портал самообслуживания для бизнес-аналитиков</li>\n<li>Масштабирование под новые бизнес-направления</li>\n</ul>\n<p><strong>Обоснование:</strong>\nРазделение хранения и вычислений позволяет независимо масштабировать аналитические нагрузки. Поддержка структурированных и полуструктурированных данных упрощает интеграцию разнородных источников.</p>\n<p><strong>Риски:</strong></p>\n<ul>\n<li>Требует переобучения команды</li>\n<li>Миграция данных из SQL Server 2008</li>\n</ul>\n<p><strong>Владелец:</strong> Data Team</p>\n",
+      "featured": true,
+      "flag": "default",
+      "tags": [
+        "new"
+      ],
+      "position": [
+        302,
+        458
+      ]
+    },
+    {
+      "id": "data-security",
+      "release": "2026-03-13",
+      "title": "Data Masking & RBAC",
+      "ring": "adopt",
+      "quadrant": "tools",
+      "body": "<h1>Data Masking &amp; RBAC</h1>\n<p><img src=\"/images/security.svg\" alt=\"stub\"></p>\n<p><a href=\"/adr/data-security.md\">ADR</a></p>\n<p><strong>Бизнес-сценарии:</strong></p>\n<ul>\n<li>Соблюдение регуляторных требований (медицина, финансы)</li>\n<li>Контроль доступа к данным в витрине</li>\n<li>Аудит действий пользователей</li>\n</ul>\n<p><strong>Обоснование:</strong>\nМедицинские карты и истории болезней не попадают в витрину. Обезличенные агрегаты доступны по ролевой модели.</p>\n<p><strong>Риски:</strong></p>\n<ul>\n<li>Сложность настройки гранулярных политик</li>\n<li>Требует регулярного аудита</li>\n</ul>\n<p><strong>Владелец:</strong> Security Team</p>\n",
+      "featured": true,
+      "flag": "default",
+      "tags": [
+        "new"
+      ],
+      "position": [
+        452,
+        483
+      ]
+    },
+    {
+      "id": "datamesh",
+      "release": "2026-03-13",
+      "title": "Data Mesh",
+      "ring": "trial",
+      "quadrant": "methods-and-patterns",
+      "body": "<h1>Data Mesh</h1>\n<p><img src=\"/images/datamesh.svg\" alt=\"stub\"></p>\n<p><a href=\"/adr/datamesh.md\">ADR</a></p>\n<p><strong>Бизнес-сценарии:</strong></p>\n<ul>\n<li>Масштабирование на новых партнёров</li>\n<li>Децентрализация владения данными</li>\n<li>Подключение новых бизнес-направлений без центральной координации</li>\n</ul>\n<p><strong>Обоснование:</strong>\nКаждый домен отвечает за качество своих данных как продукта. Уменьшает зависимость от центральной команды данных, ускоряет интеграции.</p>\n<p><strong>Риски:</strong></p>\n<ul>\n<li>Требует зрелости доменных команд</li>\n<li>Необходимость изменения организационных процессов</li>\n<li>Сложность внедрения в легаси-среде</li>\n</ul>\n<p><strong>Владелец:</strong> Архитектурный комитет</p>\n",
+      "featured": true,
+      "flag": "default",
+      "tags": [
+        "new"
+      ],
+      "position": [
+        553,
+        210
+      ]
+    },
+    {
+      "id": "no-direct-calls",
+      "release": "2026-03-13",
+      "title": "Direct Service-to-Service Calls",
+      "ring": "hold",
+      "quadrant": "methods-and-patterns",
+      "body": "<h1>Прямые вызовы между сервисами</h1>\n<p><img src=\"/images/direct-calls.svg\" alt=\"stub\"></p>\n<p><a href=\"/adr/no-direct-calls.md\">ADR</a></p>\n<p><strong>Бизнес-сценарии:</strong></p>\n<ul>\n<li>Не рекомендуется для новых интеграций</li>\n</ul>\n<p><strong>Обоснование:</strong>\nСоздаёт жёсткую耦合ность, усложняет масштабирование и отказоустойчивость. Все новые интеграции только через API Gateway + Events.</p>\n<p><strong>Риски:</strong></p>\n<ul>\n<li>Каскадные отказы</li>\n<li>Сложность версионирования</li>\n<li>Невозможность независимого деплоя</li>\n</ul>\n<p><strong>Владелец:</strong> Архитектурный комитет</p>\n",
+      "featured": true,
+      "flag": "default",
+      "tags": [
+        "changed"
+      ],
+      "position": [
+        768,
+        303
+      ]
+    },
+    {
+      "id": "event-driven",
+      "release": "2026-03-13",
+      "title": "Event-Driven Architecture",
+      "ring": "adopt",
+      "quadrant": "methods-and-patterns",
+      "body": "<h1>Event-Driven Architecture</h1>\n<p><img src=\"/images/event-driven.svg\" alt=\"stub\"></p>\n<p><a href=\"/adr/event-driven.md\">ADR</a></p>\n<p><strong>Бизнес-сценарии:</strong></p>\n<ul>\n<li>Асинхронная интеграция между доменами</li>\n<li>Обновление витрины данных в near real-time</li>\n<li>Снижение耦合ности между сервисами</li>\n</ul>\n<p><strong>Обоснование:</strong>\nДомены общаются через события, не зная о получателях. Упрощает добавление новых потребителей данных без изменений в источниках.</p>\n<p><strong>Риски:</strong></p>\n<ul>\n<li>Сложность отладки распределённых потоков</li>\n<li>Требует гарантии доставки и идемпотентности</li>\n</ul>\n<p><strong>Владелец:</strong> Архитектурный комитет</p>\n",
+      "featured": true,
+      "flag": "default",
+      "tags": [
+        "new"
+      ],
+      "position": [
+        515,
+        292
+      ]
+    },
+    {
+      "id": "kubernetes",
+      "release": "2026-03-13",
+      "title": "Kubernetes",
+      "ring": "adopt",
+      "quadrant": "platforms-and-operations",
+      "body": "<h1>Kubernetes</h1>\n<p><img src=\"/images/kubernetes.svg\" alt=\"stub\"></p>\n<p><a href=\"/adr/kubernetes.md\">ADR</a></p>\n<p><strong>Бизнес-сценарии:</strong></p>\n<ul>\n<li>Независимое масштабирование доменов</li>\n<li>Отказоустойчивость критичных сервисов</li>\n<li>Быстрое развёртывание новых версий</li>\n</ul>\n<p><strong>Обоснование:</strong>\nСтандартизация развёртывания, автоматическое масштабирование, самовосстановление сервисов. Поддерживает микросервисную архитектуру доменов.</p>\n<p><strong>Риски:</strong></p>\n<ul>\n<li>Требует компетенций DevOps</li>\n<li>Дополнительная сложность операционной поддержки</li>\n</ul>\n<p><strong>Владелец:</strong> Platform Engineering</p>\n",
+      "featured": true,
+      "flag": "default",
+      "tags": [
+        "new"
+      ],
+      "position": [
+        329,
+        553
+      ]
+    },
+    {
+      "id": "ml-platform",
+      "release": "2026-03-13",
+      "title": "ML Platform",
+      "ring": "trial",
+      "quadrant": "tools",
+      "body": "<h1>ML Platform</h1>\n<p><img src=\"/images/ml-platform.svg\" alt=\"stub\"></p>\n<p><a href=\"/adr/ml-platform.md\">ADR</a></p>\n<p><strong>Бизнес-сценарии:</strong></p>\n<ul>\n<li>ИИ-диагностика и прогнозы</li>\n<li>Версионирование и отслеживание моделей</li>\n<li>A/B тестирование алгоритмов</li>\n</ul>\n<p><strong>Обоснование:</strong>\nЦентрализованная платформа для обучения, деплоя и мониторинга моделей. Ускоряет цикл разработки ИИ-сервисов, обеспечивает воспроизводимость.</p>\n<p><strong>Риски:</strong></p>\n<ul>\n<li>Высокие вычислительные затраты</li>\n<li>Требует специализированных компетенций</li>\n</ul>\n<p><strong>Владелец:</strong> AI Domain Team</p>\n",
+      "featured": true,
+      "flag": "default",
+      "tags": [
+        "new"
+      ],
+      "position": [
+        643,
+        490
+      ]
+    },
+    {
+      "id": "legacy-dwh",
+      "release": "2026-03-13",
+      "title": "SQL Server 2008",
+      "ring": "hold",
+      "quadrant": "platforms-and-operations",
+      "body": "<h1>SQL Server 2008 (Legacy DWH)</h1>\n<p><img src=\"/images/sqlserver.svg\" alt=\"stub\"></p>\n<p><a href=\"/adr/legacy-dwh.md\">ADR</a></p>\n<p><strong>Бизнес-сценарии:</strong></p>\n<ul>\n<li>Поддержка существующих отчётов (временное решение)</li>\n<li>Работа легаси-интерфейсов (PowerBuilder)</li>\n</ul>\n<p><strong>Обоснование:</strong>\nТехнология устарела, не поддерживается вендором. Не использовать для новых решений. Только критические исправления до полной миграции.</p>\n<p><strong>Риски:</strong></p>\n<ul>\n<li>Риски безопасности (нет патчей)</li>\n<li>Дефицит экспертизы на рынке</li>\n<li>Ограничения масштабирования</li>\n</ul>\n<p><strong>Владелец:</strong> Legacy Support Team\n<strong>План миграции:</strong> Месяцы 1-6 → Cloud Lakehouse</p>\n",
+      "featured": true,
+      "flag": "default",
+      "tags": [
+        "changed"
+      ],
+      "position": [
+        72,
+        595
+      ]
+    },
+    {
+      "id": "terraform",
+      "release": "2026-03-13",
+      "title": "Terraform",
+      "ring": "adopt",
+      "quadrant": "tools",
+      "body": "<h1>Terraform (Infrastructure as Code)</h1>\n<p><img src=\"/images/terraform.svg\" alt=\"stub\"></p>\n<p><a href=\"/adr/terraform.md\">ADR</a></p>\n<p><strong>Бизнес-сценарии:</strong></p>\n<ul>\n<li>Быстрое развёртывание сред для новых доменов</li>\n<li>Воспроизводимость инфраструктуры</li>\n<li>Снижение ручных ошибок при деплое</li>\n</ul>\n<p><strong>Обоснование:</strong>\nДекларативное управление облачными ресурсами. Позволяет версионировать инфраструктуру, упрощает disaster recovery.</p>\n<p><strong>Риски:</strong></p>\n<ul>\n<li>Требует обучения команды</li>\n<li>Необходимость управления state-файлами</li>\n</ul>\n<p><strong>Владелец:</strong> Platform Engineering</p>\n",
+      "featured": true,
+      "flag": "default",
+      "tags": [
+        "new"
+      ],
+      "position": [
+        508,
+        486
       ]
     }
   ]
