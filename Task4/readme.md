@@ -26,11 +26,13 @@ $env:TF_VAR_yc_folder_id="b1h..."
 
 ## 2. Подготовьте tfvars
 
-cp terraform.tfvars.example terraform.tfvars
+`cp terraform.tfvars.example terraform.tfvars`
+
+Полученные ранее креды запиши сюда.
 
 ## 3. Инициализация (скачает провайдеры)
 
-terraform init
+`terraform init`
 
 Может быть проблема
 
@@ -86,17 +88,41 @@ provider_installation {
 
 ## 5. Примените (создаст ресурсы в облаке)
 
-terraform apply tfplan
+`terraform apply tfplan`
+
+Ресурсы созданы
+
+![1773694609365](image/readme/1773694609365.png)
+
+![1773694648817](image/readme/1773694648817.png)
+
+Кластер создавался долго...
+
+![1773694678594](image/readme/1773694678594.png)
 
 ## 6. Подключитесь к ВМ (ключ сохранится в generated_ssh_key.pem)
 
+```powershell
 chmod 600 generated_ssh_key.pem
 ssh -i generated_ssh_key.pem ubuntu@<IP-из-output>
+```
 
 ## Удалить все созданные ресурсы
 
-terraform destroy
+`terraform destroy`
+
+![1773694942919](image/readme/1773694942919.png)
+
+Запрос подтверждения
+
+![1773694974969](image/readme/1773694974969.png)
+
+Final
+
+![1773695001663](image/readme/1773695001663.png)
+
+![1773695048507](image/readme/1773695048507.png)
 
 ## Очистить локальные артефакты
 
-rm -rf .terraform* terraform.tfstate* tfplan generated_ssh_key.pem
+`rm -rf .terraform* terraform.tfstate* tfplan generated_ssh_key.pem`
