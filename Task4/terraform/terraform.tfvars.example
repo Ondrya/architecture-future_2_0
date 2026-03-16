@@ -1,0 +1,11 @@
+# terraform.tfvars.example
+
+# Скопируйте в terraform.tfvars и заполните своими значениями
+
+yc_token     = "t1.9eu1..."      # получите через: yc iam create-token
+yc_cloud_id  = "b1g..."          # из консоли Yandex Cloud
+yc_folder_id = "b1h..."          # ID каталога
+
+# При необходимости переопределите подсети или ВМ
+# subnets = {...}
+# vm_instances = {...}
