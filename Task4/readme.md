@@ -36,19 +36,53 @@ terraform init
 
 ![1773692061457](image/readme/1773692061457.png)
 
-Скачайте провайдер вручную:
-
-- https://github.com/yandex-cloud/terraform-provider-yandex/releases
-
-Распакуйте в локальную папку плагинов:
+Мне помогло
 
 ```powershell
-%APPDATA%\terraform.d\plugins\yandex-cloud\yandex\terraform-provider-yandex_0.192.0_windows_amd64\
+terraform providers lock -net-mirror=https://terraform-mirror.yandexcloud.net -platform=windows_amd64 yandex-cloud/yandex
 ```
+
+### Для Windows (мой случай)
+
+**Создайте файл:**
+`%APPDATA%\terraform.rc`
+(обычно `C:\Users\ВашПользователь\terraform.rc`)
+
+```hcl
+provider_installation {
+  network_mirror {
+    url = "https://terraform-mirror.yandexcloud.net/"
+    include = ["registry.terraform.io/*/*"]
+  }
+  direct {
+    exclude = ["registry.terraform.io/*/*"]
+  }
+}
+```
+
+### Для Linux/macOS
+
+Файл: `~/.terraformrc` или `/etc/terraform.d/terraform.rc`
+
+```hcl
+provider_installation {
+  network_mirror {
+    url = "https://terraform-mirror.yandexcloud.net/"
+    include = ["registry.terraform.io/*/*"]
+  }
+  direct {
+    exclude = ["registry.terraform.io/*/*"]
+  }
+}
+```
+
+![1773693507050](image/readme/1773693507050.png)
 
 ## 4. Посмотрите, что будет создано
 
-terraform plan -out=tfplan
+`terraform plan -out=tfplan`
+
+Приложил файл `terraform plan -out=tfplan > tfplan-console.txt`
 
 ## 5. Примените (создаст ресурсы в облаке)
 
