@@ -126,3 +126,11 @@ Final
 ## Очистить локальные артефакты
 
 `rm -rf .terraform* terraform.tfstate* tfplan generated_ssh_key.pem`
+
+Аналог в Windows
+
+```powershell
+# Удаление папки .terraform и файлов состояния
+Remove-Item -Recurse -Force -Path .terraform* -ErrorAction SilentlyContinue
+Remove-Item -Force -Path terraform.tfstate*, tfplan, generated_ssh_key.pem -ErrorAction SilentlyContinue
+```
