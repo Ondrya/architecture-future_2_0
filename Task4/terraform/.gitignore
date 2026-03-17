@@ -1,0 +1,14 @@
+# .gitignore
+
+# Terraform state (никогда не коммитьте!)
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Секреты и локальные файлы
+generated_ssh_key.pem
+*.tfvars
+!terraform.tfvars.example
+
+# Логи
+*.log

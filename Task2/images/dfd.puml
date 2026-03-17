@@ -1,0 +1,70 @@
+@startuml
+
+skinparam backgroundColor #FFFFFF
+skinparam rectangle {
+    BackgroundColor #ffffff
+    BorderColor #333333
+    FontColor #000000
+}
+skinparam arrowColor #555555
+
+rectangle "Medical Domain\n(Клиники)" as Medical {
+    rectangle "Медицинская БД" as MedDB
+    rectangle "Медицинские сервисы" as MedSvc
+}
+
+rectangle "Fintech Domain\n(Финтех)" as Fintech {
+    rectangle "Финансовая БД" as FtDB
+    rectangle "Финтех-сервисы" as FtSvc
+}
+
+rectangle "AI Domain\n(ИИ-сервисы)" as AI {
+    rectangle "ML-платформа" as ML
+    rectangle "ИИ-модели" as AIModels
+}
+
+rectangle "Analytics Domain\n(Витрина данных)" as Analytics {
+    rectangle "Lakehouse" as Lake
+    rectangle "Портал самообслуживания" as Portal
+}
+
+rectangle "Integration Domain" as Integration {
+    rectangle "API Gateway" as Gateway
+    rectangle "Контракты данных" as Contracts
+}
+
+' Потоки данных
+MedDB -right-> MedSvc : CRUD операции
+FtDB -right-> FtSvc : CRUD операции
+ML -right-> AIModels : Обучение/инференс
+
+MedSvc -down-> ML : Анонимизированные данные\nдля обучения (Secure Channel)
+AIModels -right-> MedSvc : Результаты диагностики
+
+FtSvc -down-> Lake : Финансовые метрики\n(CDC/Event Stream)
+AIModels -down-> Lake : Агрегированные результаты\nмоделей (Event Stream)
+MedSvc -down-> Lake : Обезличенные метрики\n(без карт и историй)
+
+Portal -up-> Lake : Запросы отчётов
+Gateway -up-> Portal : Маршрутизация
+Gateway -up-> MedSvc : Маршрутизация
+Gateway -up-> FtSvc : Маршрутизация
+
+Contracts -up-> Gateway : Стандартные контракты
+
+note right of Lake
+  **Важно**: В Lakehouse НЕ попадают:
+  • Медицинские карты
+  • Истории болезней
+  • Результаты исследований
+  Только агрегированные метрики
+end note
+
+note left of Integration
+  **Для новых партнёров**
+  (фармацевтика, электроника):
+  Подключение через контракты
+  без изменений в доменах
+end note
+
+@enduml

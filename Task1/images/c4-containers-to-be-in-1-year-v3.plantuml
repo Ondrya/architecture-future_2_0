@@ -1,0 +1,75 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Целевая архитектура «Будущее 2.0» (через 1 год) — с учётом легаси и инфраструктуры
+
+Person(analyst, "Бизнес-аналитик")
+Person(doctor, "Врач")
+Person(fintech_user, "Финансовый оператор")
+Person(admin, "Администратор безопасности")
+
+System_Boundary(cloud, "Облачная платформа") {
+    
+    Container(iam, "IAM-сервис", "Identity Provider", "Единая аутентификация, RBAC, аудит доступа ко всем системам")
+    
+    Container(data_portal, "Портал самообслуживания", "Web + API", "Конструктор отчётов, метаданные, контроль доступа на уровне ролей")
+    
+    Container_Boundary(medical_domain, "Домен: Медицина") {
+        Container(med_db, "Медицинская БД", "Cloud SQL/NoSQL", "Карты, снимки")
+        Container(med_svc, "Медицинские сервисы", "Microservices", "CRUD, валидация")
+        Container(sensitive_svc, "Сервис работы с чувствительными данными", "Encryption/Tokenization", "Маскирование, псевдонимизация, контроль доступа к ПДн/медицинским данным")
+    }
+    
+    Container_Boundary(fintech_domain, "Домен: Финтех") {
+        Container(ft_db, "Финансовая БД", "Cloud OLAP", "Счета, транзакции")
+        Container(ft_svc, "Финтех-сервисы", "Go/Java", "Платежи, скоринг")
+    }
+    
+    Container_Boundary(ai_domain, "Домен: ИИ") {
+        Container(ai_svc, "ИИ-модели", "Python/ML Platform", "Диагностика, прогнозы")
+    }
+    
+    Container(analytics_core, "Аналитическое ядро", "Lakehouse + BI Engine", "Агрегированные обезличенные данные для быстрых отчётов")
+    
+    Container(message_broker, "Брокер сообщений", "Kafka/RabbitMQ", "Асинхронный обмен событиями между доменами, буферизация, гарантированная доставка")
+    
+    Container_Boundary(legacy_layer, "Слой интеграции с легаси") {
+        Container(legacy_adapter, "Адаптер DWH", "ETL/ELT + API Wrapper", "Изолирует старое хранилище, предоставляет стандартизированный интерфейс")
+        Container(legacy_dwh, "Legacy DWH", "SQL Server 2008", "Исторические данные, часть бизнес-логики — постепенно выводится из эксплуатации")
+    }
+    
+    Container(backup_dr, "Сервис резервного копирования и DR", "Cloud Backup + Geo-Replication", "Автоматические бэкапы, восстановление, геораспределённая отказоустойчивость")
+    
+    Container(api_gateway, "API Gateway", "Cloud Gateway", "Единая точка входа, маршрутизация, rate limiting, TLS")
+}
+
+' Потоки
+Rel(analyst, data_portal, "Строит отчёты", "HTTPS")
+Rel(doctor, med_svc, "Работает с картами", "HTTPS")
+Rel(fintech_user, ft_svc, "Проводит операции", "HTTPS")
+Rel(admin, iam, "Управляет ролями", "Admin UI")
+
+Rel(iam, data_portal, "Проверяет права", "OIDC/OAuth2")
+Rel(iam, med_svc, "Проверяет права", "OIDC/OAuth2")
+Rel(iam, ft_svc, "Проверяет права", "OIDC/OAuth2")
+
+Rel(data_portal, analytics_core, "Запрашивает агрегаты", "Internal API")
+Rel(analytics_core, message_broker, "Получает события", "Subscribe")
+Rel(analytics_core, legacy_adapter, "Выгружает исторические данные", "Batch ETL")
+
+Rel(med_svc, sensitive_svc, "Передаёт данные для защиты", "Internal API")
+Rel(sensitive_svc, message_broker, "Публикует обезличенные события", "Publish")
+
+Rel(ft_svc, message_broker, "Публикует финансовые события", "Publish")
+Rel(ai_svc, message_broker, "Публикует результаты моделей", "Publish")
+
+Rel(legacy_adapter, legacy_dwh, "Обращается к легаси", "Legacy Protocol")
+Rel(backup_dr, legacy_dwh, "Резервное копирование", "Backup Agent")
+Rel(backup_dr, med_db, "Резервное копирование", "Snapshot")
+Rel(backup_dr, ft_db, "Резервное копирование", "Snapshot")
+
+Note right of data_portal: **Витрина данных**:\nТолько обезличенные агрегаты.\nМедицинские карты — вне периметра.
+Note right of legacy_layer: **Стратегия миграции**:\nЛегаси изолирован, новые функции — в доменах.\nПостепенный вывод DWH из эксплуатации.
+Note right of backup_dr: **Надёжность**:\nRPO < 15 мин, RTO < 1 час для критичных систем.
+
+@enduml
